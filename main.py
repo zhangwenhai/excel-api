@@ -131,7 +131,7 @@ class Item(BaseModel):
     sku: str
     dimensionsType: str
     deliveryPrice: float
-    badge: list[Badge]
+    badge: Badge
     subcategories: list[SubCategory]
     symbol: str
 
@@ -207,7 +207,7 @@ async def create_xlsx(items: list[Item]):
         ws.cell(idx, 43, item.sku)
         ws.cell(idx, 44, item.dimensionsType)
         ws.cell(idx, 45, item.deliveryPrice)
-        ws.cell(idx, 46, ", ".join([f"{b.bestSeller}, {b.amazonChoice}, {b.newRelease}, {b.ebc}, {b.video}" for b in item.badge]))
+        ws.cell(idx, 46, f"{item.badge.bestSeller}, {item.badge.amazonChoice}, {item.badge.newRelease}, {item.badge.ebc}, {item.badge.video}")
         ws.cell(idx, 47, ", ".join([f"{sub.label} ({sub.code})" for sub in item.subcategories]))
         ws.cell(idx, 48, item.symbol)
 
