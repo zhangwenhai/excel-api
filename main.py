@@ -86,53 +86,53 @@ class Badge(BaseModel):
     video: str
 
 class Item(BaseModel):
-    asin: str
-    brand: str
-    brandUrl: str
-    imageUrl: str
-    title: str
-    parent: str
-    nodeLabelPath: str
-    nodeIdPath: str
-    nodeId: int
-    bsrId: str
-    bsr: int
-    bsrCv: int
-    bsrCr: float
-    amzUnit: int
-    amzUnitDate: str
-    amzSales: int
-    units: int
+    asin: str | None
+    brand: str | None
+    brandUrl: str | None
+    imageUrl: str | None
+    title: str | None
+    parent: str | None
+    nodeLabelPath: str | None
+    nodeIdPath: str | None
+    nodeId: int | None
+    bsrId: str | None
+    bsr: int | None
+    bsrCv: int | None
+    bsrCr: float | None
+    amzUnit: str | None
+    amzUnitDate: str | None
+    amzSales: int | None
+    units: int | None
     unitsGr: int | None
-    revenue: float
-    price: float
-    averagePrice: float
-    primePrice: float
-    profit: float
-    fba: float
-    ratings: int
-    ratingsRate: float
-    rating: float
-    ratingsCv: int
-    ratingDelta: int
-    availableDate: str
-    fulfillment: str
-    variations: int
-    sellers: int
-    sellerName: str
-    sellerId: str
-    sellerNation: str
-    lqs: int
-    weight: str
-    dimension: str
-    pkgDimensions: str
-    pkgDimensionType: str
-    pkgWeight: str
-    sku: str
-    dimensionsType: str
-    deliveryPrice: float
-    badge: Badge
-    subcategories: list[SubCategory]
+    revenue: float | None
+    price: float | None
+    averagePrice: float | None
+    primePrice: float | None
+    profit: float | None
+    fba: float | None
+    ratings: int | None
+    ratingsRate: float | None
+    rating: float | None
+    ratingsCv: int | None
+    ratingDelta: int | None
+    availableDate: str | None
+    fulfillment: str | None
+    variations: int | None
+    sellers: int | None
+    sellerName: str | None
+    sellerId: str  | None
+    sellerNation: str | None
+    lqs: int | None
+    weight: str | None
+    dimension: str | None
+    pkgDimensions: str | None
+    pkgDimensionType: str | None
+    pkgWeight: str | None
+    sku: str | None
+    dimensionsType: str | None
+    deliveryPrice: float | None
+    badge: Badge | None
+    subcategories: list[SubCategory] | None
     symbol: str
 
 @app.post("/xlsx")
@@ -150,7 +150,8 @@ async def create_xlsx(items: list[Item]):
         ws.cell(idx, 3, item.brandUrl)
         # ws.cell(idx, 4, item.imageUrl)
 
-        img_data = requests.get(item.imageUrl).content
+        if item.imageUrl:
+            img_data = requests.get(item.imageUrl).content
 
         img_path = f"/tmp/{uuid.uuid4()}.jpg"
 
@@ -207,7 +208,7 @@ async def create_xlsx(items: list[Item]):
         ws.cell(idx, 43, item.sku)
         ws.cell(idx, 44, item.dimensionsType)
         ws.cell(idx, 45, item.deliveryPrice)
-        ws.cell(idx, 46, f"{item.badge.bestSeller}, {item.badge.amazonChoice}, {item.badge.newRelease}, {item.badge.ebc}, {item.badge.video}")
+        ws.cell(idx, 46, f"{item.badge.bestSeller}, {item.badge.amazonChoice}, {item.badge.newRelease}, {item.badge.ebc}, {item.badge.video}" if item.badge else None)
         ws.cell(idx, 47, ", ".join([f"{sub.label} ({sub.code})" for sub in item.subcategories]))
         ws.cell(idx, 48, item.symbol)
 
