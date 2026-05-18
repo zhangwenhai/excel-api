@@ -99,9 +99,9 @@ class Item(BaseModel):
     bsr: int | None
     bsrCv: int | None
     bsrCr: float | None
-    amzUnit: str | None
+    amzUnit: int | None
     amzUnitDate: str | None
-    amzSales: int | None
+    amzSales: float | None
     units: int | None
     unitsGr: int | None
     revenue: float | None
