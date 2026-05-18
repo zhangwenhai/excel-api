@@ -103,7 +103,7 @@ class Item(BaseModel):
     amzUnitDate: str | None
     amzSales: float | None
     units: int | None
-    unitsGr: int | None
+    unitsGr: float | None
     revenue: float | None
     price: float | None
     averagePrice: float | None
