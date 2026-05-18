@@ -73,6 +73,18 @@ app = FastAPI()
 #   "symbol": "N"
 # }
 
+class SubCategory(BaseModel):
+    code: str
+    rank: int
+    label: str
+
+class Badge(BaseModel):
+    bestSeller: str
+    amazonChoice: str
+    newRelease: str
+    ebc: str
+    video: str
+
 class Item(BaseModel):
     asin: str
     brand: str
@@ -88,7 +100,7 @@ class Item(BaseModel):
     bsrCv: int
     bsrCr: float
     amzUnit: int
-    amzUnitDate: int
+    amzUnitDate: str
     amzSales: int
     units: int
     unitsGr: int | None
@@ -103,7 +115,7 @@ class Item(BaseModel):
     rating: float
     ratingsCv: int
     ratingDelta: int
-    availableDate: int
+    availableDate: str
     fulfillment: str
     variations: int
     sellers: int
@@ -119,8 +131,8 @@ class Item(BaseModel):
     sku: str
     dimensionsType: str
     deliveryPrice: float
-    badge: str
-    subcategories: str
+    badge: list[Badge]
+    subcategories: list[SubCategory]
     symbol: str
 
 @app.post("/xlsx")
@@ -195,8 +207,8 @@ async def create_xlsx(items: list[Item]):
         ws.cell(idx, 43, item.sku)
         ws.cell(idx, 44, item.dimensionsType)
         ws.cell(idx, 45, item.deliveryPrice)
-        ws.cell(idx, 46, item.badge)
-        ws.cell(idx, 47, item.subcategories)
+        ws.cell(idx, 46, ", ".join([f"{b.bestSeller}, {b.amazonChoice}, {b.newRelease}, {b.ebc}, {b.video}" for b in item.badge]))
+        ws.cell(idx, 47, ", ".join([f"{sub.label} ({sub.code})" for sub in item.subcategories]))
         ws.cell(idx, 48, item.symbol)
 
     file_path = "/tmp/products.xlsx"
